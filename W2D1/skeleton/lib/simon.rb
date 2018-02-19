@@ -12,7 +12,9 @@ class Simon
   def play
     until game_over
       take_turn
+      system ("clear")
     end
+
     game_over_message
     reset_game
   end
@@ -27,7 +29,12 @@ class Simon
 
   def show_sequence
     add_random_color
-    seq
+    seq.each do |color|
+      puts color
+      sleep 0.75
+      system("clear")
+      sleep 0.25
+    end
   end
 
   def require_sequence
