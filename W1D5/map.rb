@@ -21,7 +21,6 @@ class Map
   end
 
   def lookup(key)
-    # debugger
     match = a_map.select{|pair| pair[0] == key}
     return nil if match.empty?
     match[0]
