@@ -1,13 +1,11 @@
 class Board
-  attr_accessor :cups, :player1, :player2, :current_player, :players
+  attr_accessor :cups, :name1, :name2
 
   def initialize(name1, name2)
-    @player1 = name1
-    @player2 = name2
+    @name1 = name1
+    @name2 = name2
     @cups = Array.new(14){Array.new}
     fill_cups
-    @players = [player1, player2]
-    @current_player = players.first
   end
 
   def place_stones
@@ -15,16 +13,38 @@ class Board
   end
 
   def valid_move?(start_pos)
-    raise ValidStartError unless @current_player.cups.include?(start_pos)
-    true
+    raise "Invalid starting cup" if start_pos < 0 || start_pos > 12
+    raise "Invalid starting cup" if @cups[start_pos].empty?
   end
 
   def make_move(start_pos, current_player_name)
+    stones = @cups[start_pos]
+    @cups[start_pos] = []
+    cup_idx = start_pos
+    until stones.empty?
+      cup_idx += 1
+      cup_idx = 0 if cup_idx > 13
+
+      if cup_idx == 6
+        @cups[6] << stones.pop if current_player_name == name1
+      elsif cup_idx == 13
+        @cups[13] << stones.pop if current_player_name == name2
+      else
+        @cups[cup_idx] << stones.pop
+      end
+    end
+
+    render
+    next_turn(cup_idx)
   end
 
   def next_turn(ending_cup_idx)
-    if current_player.cups.include?(ending_cup_idx)
-      make_move()
+    if ending_cup_idx == 6 || ending_cup_idx == 13
+      return :prompt
+    elsif @cups[ending_cup_idx].length == 1
+      return :switch
+    else
+      return ending_cup_idx
     end
   end
 
@@ -37,9 +57,18 @@ class Board
   end
 
   def one_side_empty?
+    if @cups[0..5].all?(&:empty?) || @cups[7..12].all?(&:empty?)
+      return true
+    else
+      false
+    end
   end
 
   def winner
+    player1_count = @cups[6].count
+    player2_count = @cups[13].count
+    return :draw if player1_count == player2_count 
+    player1_count > player2_count ? name1 : name2
   end
 
   private
@@ -56,7 +85,7 @@ class Board
 end
 
 
-class ValidStartError < StandardError
+class InvalidStartingCup < StandardError
   def message
     "That's not a valid starting move."
   end
