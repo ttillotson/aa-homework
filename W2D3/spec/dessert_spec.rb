@@ -8,7 +8,7 @@ Instructions: implement all of the pending specs (the `it` statements without bl
 
 describe Dessert do
   let(:chef) { double("chef") }
-  subject(:dessert) {Dessert.new("Souffle", 3, "chef")}
+  subject(:dessert) {Dessert.new("Souffle", 3, chef)}
 
   describe "#initialize" do
     it "sets a type" do
@@ -57,15 +57,14 @@ describe Dessert do
     end
 
     it "raises an error if the amount is greater than the quantity" do
-      # dessert.eat(80000)
       expect{dessert.eat(80000)}.to raise_error("not enough left!")
     end
   end
 
   describe "#serve" do
     it "contains the titleized version of the chef's name" do
-      dessert.serve
       allow(chef).to receive(:titleize).and_return("Chef")
+
       expect(dessert.serve).to eq("Chef has made 3 Souffles!")
     end
   end
