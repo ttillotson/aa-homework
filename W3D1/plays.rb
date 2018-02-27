@@ -50,25 +50,26 @@ class Play
   end
 
   def self.find_by_title(title)
-    data = PlayDBConnection.instance.execute(<<-SQL)
+    data = PlayDBConnection.instance.execute(<<-SQL, title)
       SELECT
         title
       FROM
         plays
       WHERE
-        title = #{title}
+        title = ?
     SQL
     data.map { |datum| Play.new(datum)}
   end
 
   def self.find_by_playwright(name)
-    data = PlayDBConnection.instance.execute(<<-SQL)
+    playwright_id = Playwright.find_by_name(name)
+    data = PlayDBConnection.instance.execute(<<-SQL, playwright_id)
       SELECT
         playwright
       FROM
         plays
       WHERE
-        playwright = #{name}
+        playwright_id = ?
     SQL
 
     data.map { |datum| Play.new(datum)}
@@ -84,16 +85,16 @@ class Playwright
   end
 
   def self.find_by_name(name)
-    data = PlayDBConnection.instance.execute(<<-SQL)
+    data = PlayDBConnection.instance.execute(<<-SQL, @name)
       SELECT
         name
       FROM
-        playwright
+        playwrights
       WHERE
-        name = #{name}
+        name = ?
     SQL
 
-    data.map { |datum| Playwright.new(datum)}
+    data.map { |datum| Playwright.new(datum.first)}
   end
 
   def initialize(options)
@@ -107,9 +108,9 @@ class Playwright
     raise "#{self} is already in the database" if @id
     PlayDBConnection.instance.execute(<<-SQL, @name, @birth_year)
       INSERT INTO
-        playwright (name, birth_year)
+        playwrights (name, birth_year)
       VALUES
-        (? ?)
+        (?, ?)
       WHERE
         id = ?
     SQL
@@ -118,9 +119,9 @@ class Playwright
 
   def update
     raise "#{self} is not in the database" unless @id
-    PlayDBConnection.instance.execute(<<-SQL, @id, @name, @birth_year)
+    PlayDBConnection.instance.execute(<<-SQL, @name, @birth_year, @id)
       UPDATE
-        playwright
+        playwrights
       SET
         name = ?, birth_year = ?
       WHERE
@@ -129,14 +130,13 @@ class Playwright
   end
 
   def get_plays
-    data = PlayDBConnection.instance.execute(<<-SQL)
+    data = PlayDBConnection.instance.execute(<<-SQL, @id)
       SELECT
-        plays
+        *
       FROM
-        playwright
-      JOIN
         plays
-        ON playwright.id = plays.playwright_id
+      WHERE
+        playwright_id = ?
     SQL
 
     data.map{ |datum| Play.new(datum)}
