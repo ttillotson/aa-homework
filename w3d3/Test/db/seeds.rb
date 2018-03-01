@@ -5,3 +5,9 @@
 #
 #   movies = Movie.create([{ name: 'Star Wars' }, { name: 'Lord of the Rings' }])
 #   Character.create(name: 'Luke', movie: movies.first)
+
+home1 = House.create(address: 3456)
+home2 = House.create(address: 34567)
+
+travis = Person.create(name: 'Travis', house_id: home1.id)
+johnny = Person.create(name: 'Johnny', house_id: home2.id)
