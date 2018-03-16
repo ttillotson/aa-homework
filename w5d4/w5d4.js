@@ -5,3 +5,15 @@ function madLib(verb, adj, noun) {
 function isSubstring(string, sub) {
   return string.includes(sub);
 }
+
+function fizzbuzz(array) {
+  const fizzyArr = [];
+
+  array.forEach(el => {
+    if ((el % 3 === 0) ^ (el % 5 === 0)) {
+      fizzyArr.push(el);
+    }
+  });
+
+  return fizzyArr;
+}
