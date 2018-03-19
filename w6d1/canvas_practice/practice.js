@@ -4,8 +4,8 @@ document.addEventListener("DOMContentLoaded", function(){
   canvas.height = 500;
 
   const ctx = canvas.getContext('2d');
-  ctx.fillStyle = "purple";
-  ctx.fillRect = (0, 0, 500, 500);
+  ctx.fillStyle = "green";
+  ctx.fillRect = (500, 500, 500, 500);
 
   ctx.beginPath();
   ctx.arc(120, 120, 30, 0, 2*Math.PI, true);
