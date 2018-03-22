@@ -21,6 +21,8 @@ document.addEventListener("DOMContentLoaded", () => {
   // --- your code here!
 
   const handleNewFav = (e) => {
+    e.preventDefault();
+
     const favPlaceInputEl = document.getElementsByClass("favorite-input")[0];
     const favPlace = favPlaceInputEl.value;
     favPlaceInputEl.value = "";
@@ -30,7 +32,6 @@ document.addEventListener("DOMContentLoaded", () => {
     newListItem.text(`${favPlace}`);
 
     favList.appendChild(newListItem);
-
   };
 
   const submitButton = document.querySelector("favorite-submit");
@@ -42,7 +43,19 @@ document.addEventListener("DOMContentLoaded", () => {
   // adding new photos
 
   // --- your code here!
+  const handleForm = (e) => {
+    const photoForm = document.querySelector("photo-form-container");
+    photoForm.classList.remove("hidden");
+};
 
+  const toggleForm = document.querySelector("photo-show-button");
+  toggleForm.addEventListener("click", handleForm);
 
+  const submitForm = (e) => {
+    e.preventDefault();
+  };
+
+  const formSubmitButton = document.querySelector("photo-url-submit");
+  formSubmitButton.addEventListener("click", submitForm);
 
 });
